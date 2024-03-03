@@ -1,5 +1,7 @@
-const int motorRightPin = 2;          // Motor 1 Pin
-const int motorLeftPin = 3;           // Motor 2 Pin
+const int motorRight1Pin = 2;          // Motor Right1 Pin
+const int motorLeft1Pin = 4;           // Motor Left1 Pin
+const int motorRight2Pin = 4;          // Motor Right2 Pin
+const int motorLeft2Pin = 7;           // Motor Left2 Pin
 const int motorRightSpeedPin = 6;     // Motor 1 Speed Pin
 const int motorLeftSpeedPin = 5;      // Motor 2 Speed Pin
 const int potRightPin = A3;           // Potentiometer 1 Pin (Left)
@@ -8,16 +10,20 @@ const int potLeftPin = A1;            // Potentiometer 2 Pin (Right)
 int pwmValueRight;                     // PWM value for Motor 1
 int pwmValueLeft;                      // PWM value for Motor 2
 
-void setup() {
-  pinMode(motorRightPin, OUTPUT);      // Motor 1 control pin
-  pinMode(motorLeftPin, OUTPUT);       // Motor 2 control pin
+void setup() 
+{
+  pinMode(motorRight1Pin, OUTPUT);      // Motor 1 control pin
+  pinMode(motorLeft1Pin, OUTPUT);       // Motor 2 control pin
+  pinMode(motorRight2Pin, OUTPUT);      // Motor 1 control pin
+  pinMode(motorLeft2Pin, OUTPUT);       // Motor 2 control pin
   pinMode(motorRightSpeedPin, OUTPUT);// Motor 1 speed control pin
   pinMode(motorLeftSpeedPin, OUTPUT); // Motor 2 speed control pin
   pinMode(potRightPin, INPUT);         // Potentiometer 1 pin
   pinMode(potLeftPin, INPUT);          // Potentiometer 2 pin
 }
 
-void loop() {
+void loop() 
+{
   int potValueRight = analogRead(potRightPin);     // Read potentiometer 1 value
   int potValueLeft = analogRead(potLeftPin);       // Read potentiometer 2 value
 
@@ -26,30 +32,48 @@ void loop() {
   pwmValueLeft = map(potValueLeft, 0, 1023, -255, 255);
 
   // Adjust PWM values around the middle to stop the motors
-  if (abs(pwmValueRight) < 20) {
+  if (abs(pwmValueRight) < 20) 
+  {
     pwmValueRight = 0;
   }
-  if (abs(pwmValueLeft) < 20) {
+  if (abs(pwmValueLeft) < 20) 
+  {
     pwmValueLeft = 0;
   }
 
   // Control Motor 1 (Right)
-  if (pwmValueRight > 0) {
-    digitalWrite(motorRightPin, HIGH);       // Turn Motor 1 on forward
+  if (pwmValueRight > 0) 
+  {
+    digitalWrite(motorRight1Pin, HIGH);       // Turn Motor 1 on forward
+    digitalWrite(motorRight2Pin, LOW);
     analogWrite(motorRightSpeedPin, pwmValueRight); // Set Motor 1 speed
-  } else {
-    digitalWrite(motorRightPin, LOW);        // Turn Motor 1 off backward
+  } else if(pwmValueRight < 0)
+  {
+    digitalWrite(motorRight1Pin, LOW);        // Turn Motor 1 off backward
+    digitalWrite(motorRight2Pin, HIGH);        // Turn Motor 1 off backward
     analogWrite(motorRightSpeedPin, -pwmValueRight); // Set Motor 1 speed
+  } else
+  {
+    digitalWrite(motorRight1Pin, LOW);
+    digitalWrite(motorRight2Pin, LOW);
   }
 
   // Control Motor 2 (Left)
-  if (pwmValueLeft > 0) {
-    digitalWrite(motorLeftPin, HIGH);        // Turn Motor 2 on forward
+  if (pwmValueLeft > 0) 
+  {
+    digitalWrite(motorLeft1Pin, HIGH);        // Turn Motor 2 on forward
+    digitalWrite(motorLeft2Pin, LOW);
     analogWrite(motorLeftSpeedPin, pwmValueLeft); // Set Motor 2 speed
-  } else {
-    digitalWrite(motorLeftPin, LOW);         // Turn Motor 2 off backward
+  } else if (pwmValueLeft < 0)
+  {
+    digitalWrite(motorLeft1Pin, LOW);         // Turn Motor 2 off backward
+    digitalWrite(motorLeft2Pin, HIGH);
     analogWrite(motorLeftSpeedPin, -pwmValueLeft); // Set Motor 2 speed
+  } else
+  {
+    digitalWrite(motorLeft1Pin, LOW);
+    digitalWrite(motorLeft2Pin, LOW);
   }
 
   delay(100); // Delay for stability
-}
+
